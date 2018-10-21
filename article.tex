@@ -13,11 +13,11 @@
 
 \section*{Abstract}
 
-Monitoring complex cyber-physical systes generate large amounts of data in the form of time series. Unfortunately, collected data may contain erroneous values caused by various events (e.g. device defects, communication errors, environmental changes, etc), which may effect the stability and controllability of the system. Therefore, a variety of methods were developed in order to identify and eliminate erroneous data.
+Monitoring complex cyber-physical systems generate large amounts of data in the form of time series. Unfortunately, collected data may contain erroneous values caused by various events (e.g. device defects, communication errors, environmental changes, etc), which may effect the stability and controllability of the system. Therefore, a variety of methods were developed in order to identify and eliminate erroneous data.
 
 The goal of this paper is to present a platform that integrates a number of functionalities necessary in the process of anomaly detection, from data gathering, preprocessing towards various anomaly detection techniques and visualization methods.The purpose of this tool is to allow a developer to test, select and fine tune different algorithms that best fit anomaly detection in a given domain.
 
-Anomaly detection in time series uses various methods such as basic ones inspired from signal processing, methods that are based on time, space or functional correlations, methos based on system theory, or on pattern recognition. These methods perform differently on different data sets and for differrent types of anomalies. There isn't a ``universal recipe'' that works in all cases. Data analysts must choose the right approach for anomaly detection, taking into consideration the characteristics of data, the characteristics of the monitored system and the type of anomaly. Our platform tries to cover most of the detection techniques used in time series and aims at providing data analysts with an environment that allows comparisons between the results of different anomaly detection methods.
+Anomaly detection in time series uses various methods such as basic ones inspired from signal processing, methods that are based on time, space or functional correlations, methods based on system theory, or on pattern recognition. These methods perform differently on different data sets and for different types of anomalies. There isn't a ``universal recipe'' that works in all cases. Data analysts must choose the right approach for anomaly detection, taking into consideration the characteristics of data, the characteristics of the monitored system and the type of anomaly. Our platform tries to cover most of the detection techniques used in time series and aims at providing data analysts with an environment that allows comparisons between the results of different anomaly detection methods.
 
 To demonstrate the utility of the platform, we present a series of experiments done with different methods for anomaly detection on time series and evaluate their results.
 
@@ -29,41 +29,41 @@ Other applications of anomaly detecting systems include systems that monitor our
 
 Most anomaly detection algorithms were developed for a given problem or a given range of problems. While creating general algorithms is really hard and may not even be possible, it is best to try many different approaches. The problem we are trying to solve is the lack of a designated platform or tool that can aid in deciding which anomaly detection algorithm works best for a particular problem.
 
-In this paper we propose a platform that enables a user to test a variety of anomaly detection algorithms, with emphasis on time series data. This data has the form $X = \{x_t \in {\rm I\!R} : \forall t \ge 0\}$. Furthermore, we will use the following functional definition of what an anomaly is: An anomaly is a data point or set of data, which is significantly different from all other data points or sets. This means that in order to define an anomaly, one must first have a notion of nominal data. The term anomaly is relative and can not be applied to a datapoint independently of any dataset.
+In this paper we propose a platform that enables a user to test a variety of anomaly detection algorithms, with emphasis on time series data. This data has the form $X = \{x_t \in {\rm I\!R} : \forall t \ge 0\}$. Furthermore, we will use the following functional definition of what an anomaly is: An anomaly is a data point or set of data, which is significantly different from all other data points or sets. This means that in order to define an anomaly, one must first have a notion of nominal data. The term anomaly is relative and can not be applied to a data-point independently of any dataset.
 
 The following chapters are structured as follows: In Section \ref{relwork} we describe previous and related work on the subject. Next, in Section \ref{methods} we describe the types of anomaly detection methods provided by our platform. We will test these methods in Section \ref{experiments}. This will be followed by a discussion on the future research directions and implications in Section \ref{discussion}.
 
 \section{Related Work \label{relwork}}
 
-Most methods for anomaly detection are developed for a given field or have a specific application. In \cite{nnfd1994} and \cite{MMAD2006} the authors developed methods to detect anomalies in airplane data. In \cite{ghad2018} similar methods were developed for IoT.
+Most methods for anomaly detection are developed for a given field or have a specific application. In \cite{nnfd1994} and \cite{MMAD2006} the authors developed methods to detect anomalies in airplane data. In \cite{ghad2018} similar methods were developed for IoT. In \cite{ADDSCIL} methods for detecting anomalies in Big Data are presented. In \cite{NDTSDII1996} methods are used to detect anomalies in industrial machineries.
 
-In \cite{outlierSurvey2014} a host of algorithms and techniques are described and categorized. The authors found that while some algorithms in different fields are very similar, most algorithms are hard to generalize. They also note, that numerous formulations of anomaly detection problems are not suffieciently explored i.e. it is not known how well some algorithms perform in a field that was not intended for that algorithm.
+In \cite{outlierSurvey2014} a host of algorithms and techniques are described and categorized. The authors found that while some algorithms in different fields are very similar, most algorithms are hard to generalize. They also note, that numerous formulations of anomaly detection problems are not sufficiently explored, i.e. it is not known how well some algorithms perform in a field that was not intended for that algorithm.
 
-We believe that there is a real advantage in a platform that offers a variety of anomaly detection methods to the user. One can test the performance of a number of anomaly detection algoritmhs for some given test data. By having as many implementations of these algorithms as possible, the user can easily test as many algorithms as she wants with minimal effort and cost.
+We believe that there is a real advantage in a platform that offers a variety of anomaly detection methods to the user. One can test the performance of a number of anomaly detection algorithms for some given test data. By having as many implementations of these algorithms as possible, the user can easily test as many algorithms as she wants with minimal effort and cost.
 
 Efforts to bundle up different anomaly detection algorithms have already begun. In \cite{egads2015} the authors introduced an open source, generic framework for detecting anomalies in large scale time-series data.
 
 In \cite{tpad2018} we propose a platform, that offers tools for data visualization, filtering and classification for a variety of data formats, including but not limited to time series data.
 
-\section{Methods \label{methods}}
+\section{Time series anomaly detection in the platform \label{methods}}
 
-In this section we will present some anomaly detection methods.
+In this section we will present some anomaly detection methods implemented in the platform. We will give a brief description for each one accompanied by an example.
 
 \subsection{Outlier Detection Methods}
 
-The first type of problem is concerned with classifying each element as anomalous or nominal. We could define a function $label$ that labels a datapoint $x \in X$ either as anomalous or nominal:
+The first type of problem is concerned with classifying each element as anomalous or nominal. We could define a function $label$ that labels a data-point $x \in X$ either as anomalous or nominal:
 $$
     label: X \times x \rightarrow \{Nominal, Anomaly\}
 $$
 
-If it is possible to create a predicate function $p: x \rightarrow \{Nominal, Anomaly\}$ that can accurately detect anomalies, the implementation of the problem becomes trivial: $label(X, x) = p(x)$. Nontheless, such methods can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure.
+If it is possible to create a predicate function $p: x \rightarrow \{Nominal, Anomaly\}$ that can accurately detect anomalies, the implementation of the problem becomes trivial: $label(X, x) = p(x)$. Nonetheless, such methods can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure.
 
 If such a predicate function is not possible, or doesn't meet the correctness requirements, a more complex approach can be used. Since the time series is generated by a generative process, one could hope to be able to accurately describe the underlying process, and create a model of the system:
 $$
     f: t \rightarrow x^*
 $$
 
-Given such a model, one can label the anomalies based on some treshold given a distance metric $d: x \times x \rightarrow {\rm I\!R}$. If the distance between the predicted value $x^*$ and the actual value $x$ is greater than some treshold $d_{max}$, $x$ can be considered an anomaly:
+Given such a model, one can label the anomalies based on some threshold given a distance metric $d: x \times x \rightarrow {\rm I\!R}$. If the distance between the predicted value $x^*$ and the actual value $x$ is greater than some threshold $d_{max}$, $x$ can be considered an anomaly:
 $$
     p(x_t) =
         \begin{cases}
