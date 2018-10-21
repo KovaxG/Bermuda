@@ -1,25 +1,35 @@
-\documentclass{article}
+\documentclass[a4paper, 10pt]{article}
+
+\usepackage{times}
+
+\usepackage{graphicx}
+\graphicspath{{images/}}
 
 \usepackage[backend=biber, style=numeric,autocite=plain,sorting=none]{biblatex}
 \addbibresource{bibliography.bib}
 
 \usepackage{amsmath}
 
-\title{Platform for Anomaly Detection in Time-Series}
+\title{\huge Platform for Anomaly Detection in Time-Series}
 
 \begin{document}
 
 \maketitle
 
-\section*{Abstract}
+\noindent \hrulefill
 
-Monitoring complex cyber-physical systems generate large amounts of data in the form of time series. Unfortunately, collected data may contain erroneous values caused by various events (e.g. device defects, communication errors, environmental changes, etc), which may effect the stability and controllability of the system. Therefore, a variety of methods were developed in order to identify and eliminate erroneous data.
+\small
+\textit{
+Abstract: The goal of this paper is to present a platform that integrates a number of functionalities necessary in the process of anomaly detection, from data gathering, preprocessing towards various anomaly detection techniques and visualization methods.The purpose of this tool is to allow a developer to test, select and fine tune different algorithms that best fit anomaly detection in a given domain. To demonstrate the utility of the platform, we present a series of experiments done with different methods for anomaly detection on time series and evaluate their results.
+}
 
-The goal of this paper is to present a platform that integrates a number of functionalities necessary in the process of anomaly detection, from data gathering, preprocessing towards various anomaly detection techniques and visualization methods.The purpose of this tool is to allow a developer to test, select and fine tune different algorithms that best fit anomaly detection in a given domain.
+\noindent \hrulefill
 
-Anomaly detection in time series uses various methods such as basic ones inspired from signal processing, methods that are based on time, space or functional correlations, methods based on system theory, or on pattern recognition. These methods perform differently on different data sets and for different types of anomalies. There isn't a ``universal recipe'' that works in all cases. Data analysts must choose the right approach for anomaly detection, taking into consideration the characteristics of data, the characteristics of the monitored system and the type of anomaly. Our platform tries to cover most of the detection techniques used in time series and aims at providing data analysts with an environment that allows comparisons between the results of different anomaly detection methods.
+\textit{
+Keywords: Anomaly Detection
+}
 
-To demonstrate the utility of the platform, we present a series of experiments done with different methods for anomaly detection on time series and evaluate their results.
+\normalsize
 
 \section{Introduction}
 
@@ -74,7 +84,21 @@ $$
 
 In practice, this is almost never possible. Instead the model will predict the new values based on the old observed values: $f : x^n \rightarrow x^*, n \ge 1$. If $n < |X|$, we use a sliding window approach, where we generate a prediction for the next value based on the actual old values. This is useful if we can model the time series using an auto-regressive model.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Outlier}
+    \label{fig:outlier}
+    \caption{This is a horse.}
+\end{figure}
+
 \subsection{Change Point Detection}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{ChangePoint}
+    \label{fig:changepoint}
+    \caption{This is a raisin.}
+\end{figure}
 
 \subsection{Artificial Intelligence Classification}
 
