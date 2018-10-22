@@ -20,13 +20,13 @@
 
 \small
 \textit{
-Abstract: The goal of this paper is to present a platform that integrates a number of functionalities necessary in the process of anomaly detection, from data gathering, preprocessing towards various anomaly detection techniques and visualization methods. The purpose of this tool is to allow a developer to test, select and fine tune different algorithms that best fit anomaly detection in a given domain. To demonstrate the utility of the platform, we present a series of experiments done with different methods for anomaly detection on time series and evaluate their results.
+Abstract: The goal of this paper is to present a platform that integrates a number of functionalities necessary in the process of anomaly detection, from preprocessing towards various anomaly detection techniques and visualization methods. The purpose of this tool is to allow a developer to test, select and fine tune different algorithms that best fit anomaly detection in a given domain. To demonstrate the utility of the platform, we present a series of experiments done with different methods for anomaly detection on time-series and evaluate their results.
 }
 
 \noindent \hrulefill
 
 \textit{
-Keywords: Anomaly Detection
+Keywords: Anomaly Detection, time-series
 }
 
 \normalsize
@@ -41,54 +41,64 @@ Most anomaly detection algorithms were developed for a given problem or a given 
 
 In this paper we propose a platform that enables a user to test a variety of anomaly detection algorithms, with emphasis on time series data. This data has the form $X = \{x_t \in {\rm I\!R} : \forall t \ge 0\}$. Furthermore, we will use the following functional definition of what an anomaly is: An anomaly is a data point or set of data, which is significantly different from all other data points or sets. This means that in order to define an anomaly, one must first have a notion of nominal data. The term anomaly is relative and can not be applied to a data-point independently of any dataset.
 
-The following chapters are structured as follows: In Section \ref{relwork} we describe previous and related work on the subject. Next, in Section \ref{methods} we describe the types of anomaly detection methods provided by our platform. We will test these methods in Section \ref{experiments}. This will be followed by a discussion on the future research directions and implications in Section \ref{discussion}.
+The following chapters are structured as follows: In Section \ref{relwork} we describe previous and related work on the subject. Next, in Section \ref{platform} we give a brief description of the developed platform and its features. In Section \ref{methods} we describe the types of anomaly detection methods provided by our platform. We will test these methods in Section \ref{experiments}. This will be followed by a discussion on the future research directions and implications in Section \ref{discussion}.
 
 \section{Related Work \label{relwork}}
 
-Most methods for anomaly detection are developed for a given field or have a specific application. In \cite{nnfd1994} and \cite{MMAD2006} the authors developed methods to detect anomalies in airplane data. In \cite{ghad2018} similar methods were developed for IoT. In \cite{ADDSCIL} methods for detecting anomalies in Big Data are presented. In \cite{NDTSDII1996} methods are used to detect anomalies in industrial machineries.
+Most methods for anomaly detection are developed for a given field or have a specific application. In \cite{nnfd1994} and \cite{MMAD2006} the authors developed methods to detect anomalies in airplane data. In \cite{ghad2018} similar methods were developed for IoT. In \cite{ADDSCIL} methods for detecting anomalies in Big Data are presented. In \cite{NDTSDII1996} methods are used to detect anomalies in industrial machinery.
 
 In \cite{outlierSurvey2014} a host of algorithms and techniques are described and categorized. The authors found that while some algorithms in different fields are very similar, most algorithms are hard to generalize. They also note, that numerous formulations of anomaly detection problems are not sufficiently explored, i.e. it is not known how well some algorithms perform in a field that was not intended for that algorithm.
 
-We believe that there is a real advantage in a platform that offers a variety of anomaly detection methods to the user. One can test the performance of a number of anomaly detection algorithms for some given test data. By having as many implementations of these algorithms as possible, the user can easily test as many algorithms as she wants with minimal effort and cost.
-
 Efforts to bundle up different anomaly detection algorithms have already begun. In \cite{egads2015} the authors introduced an open source, generic framework for detecting anomalies in large scale time-series data.
 
-In \cite{tpad2018} we propose a platform, that offers tools for data visualization, filtering and classification for a variety of data formats, including but not limited to time series data.
+In \cite{tpad2018} a platform is proposed, that offers tools for data visualization, filtering and classification for a variety of data formats, including but not limited to time series data.
 
-\section{Time series anomaly detection in the platform \label{methods}}
+We believe that there is a real advantage in a platform that offers a variety of anomaly detection methods to the user. One can test the performance of a number of anomaly detection algorithms for some given test data. By having as many implementations of these algorithms as possible, the user can easily test as many algorithms as she wants with minimal effort and cost.
 
-In this section we will present some anomaly detection methods implemented in the platform. We will give a brief description for each one accompanied by an example.
+\section{The Platform \label{platform}}
+ 
+In this section we present the anomaly detection platform and it's functionalities.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{Workflow}
+\label{fig:workflow}
+\caption{Workflow of the thing.}
+\end{figure}
+
+\section{Anomaly Detection Techniques \label{methods}}
+
+In this section we give short descriptions of the anomaly detection methods present in the platform.
 
 \subsection{Outlier Detection Methods}
 
 The first type of problem is concerned with classifying each element as anomalous or nominal. We could define a function $label$ that labels a data-point $x \in X$ either as anomalous or nominal:
-$$
-    label: X \times x \rightarrow \{Nominal, Anomaly\}
-$$
+$$c_x = label(x,X)$$
+$$c_x \in \{Nominal, Anomaly\}$$
 
-If it is possible to create a predicate function $p: x \rightarrow \{Nominal, Anomaly\}$ that can accurately detect anomalies, the implementation of the problem becomes trivial: $label(X, x) = p(x)$. Nonetheless, such methods can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure.
+One might be able to label if an element is an anomaly by setting global lower and upper bounds. This can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure.
 
 If such a predicate function is not possible, or doesn't meet the correctness requirements, a more complex approach can be used. Since the time series is generated by a generative process, one could hope to be able to accurately describe the underlying process, and create a model of the system:
-$$
-    f: t \rightarrow x^*
-$$
+$$x_t^* = f(t)$$
 
-Given such a model, one can label the anomalies based on some threshold given a distance metric $d: x \times x \rightarrow {\rm I\!R}$. If the distance between the predicted value $x^*$ and the actual value $x$ is greater than some threshold $d_{max}$, $x$ can be considered an anomaly:
+Given such a model, one can label the anomalies based on some threshold given a dstance metric $d: X \times X \rightarrow {\rm I\!R}$. If the distance between the predicted value $x_t^*$ and the actual value $x_t$ is greater than some threshold $d_{max}$, $x_t$ can be considered an anomaly:
 $$
     p(x_t) =
         \begin{cases}
-            \text{Anomaly} & \text{if } d(x, f(t)) \ge d_{max} \\
+            \text{Anomaly} & \text{if } d(x_t, f(t)) \ge d_{max} \\
             \text{Nominal} & \text{otherwise}
         \end{cases}
 $$
 
+An ilustration of this can be seen in Figure \ref{fig:outlier}.
+
 In practice, this is almost never possible. Instead the model will predict the new values based on the old observed values: $f : x^n \rightarrow x^*, n \ge 1$. If $n < |X|$, we use a sliding window approach, where we generate a prediction for the next value based on the actual old values. This is useful if we can model the time series using an auto-regressive model.
 
 \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{Outlier}
-    \label{fig:outlier}
-    \caption{This is a horse.}
+\centering
+\includegraphics[width=\textwidth]{Outlier}
+\label{fig:outlier}
+\caption{The upper graphs shows measured values from a process, and the lower figure is the classification. While the signal stays withing a certain range of the model, represented here by the upper and lower bounds, the signal is considered nominal. Points that are outside this ``band of normality'' are considered anomalies.}
 \end{figure}
 
 \subsection{Change Point Detection}
@@ -97,7 +107,7 @@ In practice, this is almost never possible. Instead the model will predict the n
     \centering
     \includegraphics[width=\textwidth]{ChangePoint}
     \label{fig:changepoint}
-    \caption{This is a raisin.}
+    \caption{In the top most graph, we can see the observed process. In this case it is a pure sine wave. In the middle graphs we can see the coefficient of the model, which in this case is just a function of it's frequency, since it is enough to perfectly describe the process. We can consider as anomaly either the change point, either all the points where the model is outside some bounds.}
 \end{figure}
 
 \subsection{Artificial Intelligence Classification}
