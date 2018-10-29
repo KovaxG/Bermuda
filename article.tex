@@ -73,9 +73,11 @@ In this section we give short descriptions of some of the possible anomaly types
 
 \subsection{Outliers}
 
-The first type of problem is concerned with classifying each element as anomalous or nominal. We could define a function $label$ that labels a data-point $x \in X$ either as anomalous or nominal:
+The first type of problem is concerned with classifying each element as anomalous or nominal. We define a function $label$ that labels a data-point $x \in X$ either as anomalous or nominal:
 $$c_x = label(x,X)$$
 $$c_x \in \{Nominal, Anomaly\}$$
+
+There are online and offline versions of each method. Offline methods usually perform better, since for each data point we can use both past and future values. These methods may be applied in batch, or can be used online, but the detection will have a delay.
 
 \subsubsection{Bounded Method}
 
