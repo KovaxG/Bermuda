@@ -4,6 +4,8 @@
 
 \usepackage{cite}
 
+\usepackage{placeins}
+
 \usepackage{graphicx}
 \graphicspath{{images/}}
 
@@ -56,9 +58,17 @@ We believe that there is a real advantage in a platform that offers a variety of
 
 \section{The Platform \label{platform}}
  
-In this section we present the anomaly detection platform and its functionalities for time-series data.
+In this section we present the anomaly detection platform and its functionalities for time-series data. In Figure \ref{fig:workflow} the envisioned workflow is presented. 
 
-In Figure \ref{fig:workflow} the envisioned workflow is presented. The user starts by loading in some data that she wishes to analyze. She can now choose to visualize the data using the visualization tools provided by the platform. The user can apply transformations to the dataset either to smooth out the data or in an attempt to improve the classification results. Next, a user can try out a host of anomaly detection algorithms. Each one will have a set parameters. These can be fine tuned to improve the classification quality. This can be measured using classification metrics, such as precision and recall.
+The user starts by loading in some data that she wishes to analyze. Because data can be stored in many different formats, the platform was designed to work with excel, Comma Separated Values (CSV) and Attribute-Relation File Format (ARFF) files, alongside MAT files. 
+
+The user can choose to visualize the data using the visualization tools provided by the platform. We provide tools both for time-series and non time-series data. For time-series data tools for plotting, histograms and Fourier decomposition can be used.
+
+The user can apply transformations to the dataset either to smooth out the data in an attempt to improve the classification results. For this we provide high-pass, low-pass and band-pass filters. We call this step preprocessing.
+
+Next, a user can try out a host of anomaly detection algorithms. Each one will have a set of parameters. These can be fine tuned to improve the classification quality. The quality of the classification can be measured using classification metrics. The confusion matrix can be generated as well as some derived metrics such as precision and recall.
+
+When the user is satisfied with the classification, she can use the parameters of the classification method either for future tests or to implement a specialized system for monitoring anomalies.
 
 \begin{figure}
 \centering
@@ -66,6 +76,8 @@ In Figure \ref{fig:workflow} the envisioned workflow is presented. The user star
 \caption{Workflow of the classification process.}
 \label{fig:workflow}
 \end{figure}
+
+\FloatBarrier
 
 \section{Anomaly Detection Techniques \label{methods}}
 
@@ -81,7 +93,29 @@ There are online and offline versions of each method. Offline methods usually pe
 
 \subsubsection{Bounded Method}
 
-One might be able to label elements as anomalies by setting global lower and upper bounds. This can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure.
+One might be able to label elements as anomalies by setting global lower and upper bounds. This can be used to detect obvious anomalies such as extreme temperature levels or very high blood pressure. 
+
+In the platform we provide a method that classifies a point as an anomaly if it is outside certain bounds. This can be done even with any derivative of the function. We call this \emph{Bounded Derivative Method}. BDM is defined as:
+$$
+	BDM(x) = 
+	\begin{cases}
+       \text{Nominal} & \text{if } B^+ > f(x)^{(n)} > B^-\\
+    	\text{Anomaly} & \text{otherwise}
+    \end{cases}
+$$
+
+where $B^+$ and $B^-$ are the upper and lower bounds, and $f(x)^{(n)}$ is the $n$-th derivative of the signal. An example of the usage can be seen in Figure \ref{fig:BDM}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{BDM}
+\caption{A signal with a higher than average disturbance in the middle is detected by the method.}
+\label{fig:BDM}
+\end{figure}
+
+\FloatBarrier
+
+Even though this detection is trivial, it can be used to detect many types of anomalies. This is because of the fact that anomalies appear outside normal working conditions.
 
 \subsubsection{Model Distance Method}
 
@@ -98,16 +132,30 @@ $$
         \end{cases}
 $$
 
-An ilustration of this can be seen in Figure \ref{fig:outlier}. \\
+Although such a model is highly useful, sometimes in practice it is good enough to consider only the neighboring points. For illustration we will use a method inspired from \cite{MMAD2006}. This method is known as the \emph{Double Sided Median Method} for anomaly detection. By using a sliding window, we calculate the mean of the values inside the window, and if a given value is outside the allowed bounds, it is considered an anomaly. 
+
+$$
+	DSMM(x_t) = 
+		\begin{cases}
+            \text{Anomaly} & \text{if } |f(x_t) - mean(f(x_{t-k}), \dots, f(x_{t+k}))| > d \\
+            \text{Nominal} & \text{otherwise}
+        \end{cases}
+$$
+
+An example can be seen in Figure \ref{fig:DSMM}. \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{Outlier}
-\caption{The upper graphs shows measured values from a process, and the lower figure is the classification. While the signal stays withing a certain range of the model, represented here by the upper and lower bounds, the signal is considered nominal. Points that are outside this ``band of normality'' are considered anomalies.}
-\label{fig:outlier}
+\includegraphics[width=0.49\textwidth]{DSMM}
+\caption{In the top figure, we can see the raw signal. In green we see the distance of each point from the mean of the sliding window. The black line from the middle plot is the distance limit. If the values falls outside the maximum distance, that point is considered to be an anomaly, as can be seen in the bottom plot.}
+\label{fig:DSMM}
 \end{figure}
 
+\FloatBarrier
+
 \subsubsection{Linear Approximation Method}
+
+TODO
 
 \subsubsection{Autoregressive Method}
 
@@ -128,10 +176,6 @@ An example of this is illustrated in Figure \ref{fig:changepoint}.
 \caption{In the top most graph, we can see the observed process. In this case it is a pure sine wave. In the middle graphs we can see the coefficient of the model, which in this case is just a function of it's frequency, since it is enough to perfectly describe the process. We consider as anomaly either the change point, either all the points where the model is outside some bounds.}
 \label{fig:changepoint}
 \end{figure}
-
-\subsection{Artificial Intelligence Classification}
-
-
 
 \subsection{Anomalous Time Series Detection}
 
