@@ -60,15 +60,25 @@ We believe that there is a real advantage in a platform that offers a variety of
  
 In this section we present the anomaly detection platform and its functionalities for time-series data. In Figure \ref{fig:workflow} the envisioned workflow is presented. 
 
+\subsection{Data Loading}
+
 The user starts by loading in some data that she wishes to analyze. Because data can be stored in many different formats, the platform was designed to work with excel, Comma Separated Values (CSV) and Attribute-Relation File Format (ARFF) files, alongside MAT files. 
 
-The user can choose to visualize the data using the visualization tools provided by the platform. We provide tools both for time-series and non time-series data. For time-series data tools for plotting, histograms and Fourier decomposition can be used.
+\subsection{Plotting}
+
+The user can choose to visualize the data using the visualization tools provided by the platform. We provide tools both for time-series and non time-series data. For time-series data we provide tools for plotting, histograms and Fourier decomposition.
+
+\subsection{Preprocessing}
 
 The user can apply transformations to the dataset either to smooth out the data in an attempt to improve the classification results. For this we provide high-pass, low-pass and band-pass filters. We call this step preprocessing.
+
+\subsection{Anomaly Detection}
 
 Next, a user can try out a host of anomaly detection algorithms. Each one will have a set of parameters. These can be fine tuned to improve the classification quality. The quality of the classification can be measured using classification metrics. The confusion matrix can be generated as well as some derived metrics such as precision and recall.
 
 When the user is satisfied with the classification, she can use the parameters of the classification method either for future tests or to implement a specialized system for monitoring anomalies.
+
+In the next chapter we present the types of anomalies together with the detection methods used to detect them.
 
 \begin{figure}
 \centering
@@ -81,7 +91,19 @@ When the user is satisfied with the classification, she can use the parameters o
 
 \section{Anomaly Detection Techniques \label{methods}}
 
-In this section we give short descriptions of some of the possible anomaly types. For each anomaly type we present some methods for detecting such an anomaly.
+In this section we give short descriptions of some of the possible anomaly types. For each anomaly type we present some methods for detecting such an anomaly. \\
+
+In principle anomaly detection is similar to system identification. We would like to have a model of the system working in the ``nominal'' state. In the artificial intelligence fields it can be considered as a classification problem, since we assign labels to data.
+
+Anomaly detection is slightly different from these in one regard: anomalies are generally rare, and comprise a very small percent of the data. Some detection methods go for the system identification route, and try to find a model that best fits the nominal data, as well as excludes the anomalous points. Some methods go for the classification route, where artificial intelligence methodologies are used for classification. 
+
+The problem is that the quality of classification provided by the above mentioned methods depend on the size of the dataset. The essence of anomaly detection lies in the fact, that anomalies are rare events, and most datapoints in the training data are ``nominal'' points. 
+
+Some datasets do not even contain anomalies, and algorithms are expected to learn the nominal functioning of the system from ``clean data''. We call a dataset that doesn't contain anomalies a clean dataset. \\
+
+Another classification can be whether or not the methods are online or offline methods. Offline methods usually perform better, since for each data point we can use both past and future values. These methods may be applied in batch, or can be used online, but the detection will have a delay. \\
+
+Given these constraints one can start to classify the anomaly types and detection algorithms.
 
 \subsection{Outliers}
 
@@ -89,7 +111,6 @@ The first type of problem is concerned with classifying each element as anomalou
 $$c_x = label(x,X)$$
 $$c_x \in \{Nominal, Anomaly\}$$
 
-There are online and offline versions of each method. Offline methods usually perform better, since for each data point we can use both past and future values. These methods may be applied in batch, or can be used online, but the detection will have a delay.
 
 \subsubsection{Bounded Method}
 
@@ -109,7 +130,7 @@ where $B^+$ and $B^-$ are the upper and lower bounds, and $f(x)^{(n)}$ is the $n
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{BDM}
-\caption{A signal with a higher than average disturbance in the middle is detected by the method.}
+\caption{A signal with a higher than average disturbance in the middle is detected by the method. Forward difference is used as an approximation for the derivative.}
 \label{fig:BDM}
 \end{figure}
 
@@ -119,7 +140,9 @@ Even though this detection is trivial, it can be used to detect many types of an
 
 \subsubsection{Model Distance Method}
 
-If such a predicate function is not possible, or doesn't meet the correctness requirements, a more complex approach can be used. Since the time-series is generated by a generative process, one could hope to be able to accurately describe the underlying process, and create a model of the system:
+If such a predicate function is not possible, a more complex approach can be used.\\
+
+Since the time-series is generated by a generative process, one could hope to be able to accurately describe the underlying process, and create a model of the system:
 $$x_t^* = f(t)$$
 where $x_t^*$ is the predicted value of $x$ at time $t$. \\
 
