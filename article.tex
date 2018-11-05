@@ -200,13 +200,32 @@ An example of this is illustrated in Figure \ref{fig:changepoint}.
 \label{fig:changepoint}
 \end{figure}
 
-\subsection{Anomalous Time Series Detection}
-
-
-
 \section{Experiments \label{experiments}}
 
-In this section we will perform some experiments on some data, but we have not yet decided what we are going to do.
+In this section we will compare a number of anomaly detection methods, and compare their results. \\
+
+We will use precision and recall to compare the methodologies presented.
+
+First dataset
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{testplot1}   
+\caption{Description pending.}
+\label{fig:test1}
+\end{figure}
+
+\FloatBarrier
+
+\begin{center}
+\begin{tabular}{| c | c | c |}
+\hline
+Method                      & Precision & Recall \\ \hline
+Bounded Derrivative (d = 0) & 1         & 0.3678 \\ \hline
+Bounded Derrivative (d = 1) & 0.6       & 0.0689 \\ \hline
+Median Method               & 0.33      & 0.0919 \\ \hline
+\end{tabular}
+\end{center}
 
 \section{Discussion \label{discussion}}
 
